@@ -1,12 +1,11 @@
 " 修改leader键
-let mapleader = "\<space>"
-let g:mapleader ="\<space>"
+let mapleader = "\\"
+let g:mapleader ="\\"
 		" ii 替换 Esc
 inoremap ii <Esc>
 		" 将 ; 绑定到 : 用于快速进入命令行
 nnoremap ; :
 " 保证工作目录为当前目录
-autocmd BufEnter * lcd %:p:h
 
 " ##### 插件配置
 if filereadable(expand("~/.vimrc.bundles"))
@@ -42,8 +41,6 @@ set backup
 set backupdir=~/.vim/vimbackup
 
 " 交换文件
-set swapfile
-set dir=~/.vim/vimswap
 
 " undo
 if has('persistent_undo')
