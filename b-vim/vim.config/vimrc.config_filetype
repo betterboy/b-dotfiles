@@ -9,7 +9,7 @@ autocmd BufRead,BufNew *.pike setfiletype pike
 autocmd BufRead,BufNew *.decl setfiletype cpp
 
 autocmd BufRead,BufNew *.md,*.mkd,*.markdown  set filetype=markdown.mkd
-autocmd FileType python,py,c,cpp,java,javascript,go,php,ruby,xml,yml,perl set tabstop=4 shiftwidth=4 noexpandtab ai
+" autocmd FileType python,py,c,cpp,java,javascript,go,php,ruby,xml,yml,perl set tabstop=4 shiftwidth=4 noexpandtab ai
 " autocmd FileType python set tabstop=4 shiftwidth=4 expandtab ai
 " autocmd FileType ruby set tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
 " autocmd FileType pike set tabstop=4 shiftwidth=4 expandtab ai
@@ -60,7 +60,7 @@ endfunction
 map uh :call AutoSetFileHead()<cr>'s
 " map <F4> :call AutoSetFileHead()<cr>'s
 " 定义函数AutoSetFileHead，自动插入文件头
-autocmd BufNewFile *.sh,*.py,*.pike,*.h,*.hpp,*c,*cpp exec ":call AutoSetFileHead()"
+" autocmd BufNewFile *.sh,*.py,*.pike,*.h,*.hpp,*c,*cpp exec ":call AutoSetFileHead()"
 
 function! AutoSetFileHead()
 	let n = 1

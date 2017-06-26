@@ -82,9 +82,6 @@ set showcmd
 		" 在上下移动光标时，光标的上方或下方至少会保留显示的行数
 set scrolloff=3
 		" 一行宽度
-set winwidth=79
-		" 命令行（在状态行下）的高度，默认为1，这里是2
-		" Hide the default mode text (e.g. -- INSERT -- below the statusline)
 set noshowmode
 		" Always show the status line - use 2 lines for the status bar
 set laststatus=2
@@ -157,8 +154,8 @@ set softtabstop=4
 		" insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
 set smarttab
 		" " 将Tab自动转化成空格    [需要输入真正的Tab键时，使用 Ctrl+V + Tab]
-" set expandtab
-set noexpandtab
+set expandtab
+" set noexpandtab
 		" 缩进时，取整 use multiple of shiftwidth when indenting with '<' and '>'
 set shiftround
 

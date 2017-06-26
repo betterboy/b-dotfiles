@@ -416,7 +416,18 @@ Bundle 'Lokaltog/vim-powerline'
 " Always show the status line - use 2 lines for the status bar
 set laststatus=2
 
+function! Multiple_cursors_before()
+	if exists(':NeoCompleteLock')==2
+	 exe 'NeoCompleteLock'
+	endif
+endfunction
 
+function! Multiple_cursors_after()
+
+	if exists(':NeoCompleteUnLock')==2
+	 exe 'NeoCompleteUnLock'
+	endif
+endfunction
 
 
 " ################## 插件配置结束 ###########################
