@@ -668,6 +668,8 @@ endfunction
 highlight Normal guifg=grey70
 highlight Cursor guifg=grey70
 map <F5> :wall!<CR>:!sbcl --load foo.cl<CR><CR>
+
+set noswapfile
 " highlight Cursor guibg=Green guifg=NONE
 " highlight lCursor guibg=Cyan guifg=NONE
 " highlight NonText guibg=grey40
