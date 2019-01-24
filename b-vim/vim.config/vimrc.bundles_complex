@@ -27,7 +27,7 @@ call vundle#rc()
 " ##### 插件管理工具
 Bundle 'gmarik/vundle'
 
-" ###### 主题 molokai
+" ###### 主题 molokai 和 Solarized
 Bundle 'tomasr/molokai'
 let g:molokai_original = 1
 Bundle 'altercation/vim-colors-solarized'
@@ -42,25 +42,24 @@ set t_Co=256
 colorscheme molokai
 " colorscheme solarized
 
-
 " ###### 中文 vim 帮助
 Bundle 'asins/vimcdoc'
 
 
 " ##### 自动根据当前打开文件切换工作目录
-Bundle 'airblade/vim-rooter'
-let g:rooter_disable_map = 1
+"Bundle 'airblade/vim-rooter'
+"let g:rooter_disable_map = 1
 
 " ##### 缩进标识
 Bundle 'nathanaelkane/vim-indent-guides'
 		" 随 vim 自启动
 let g:indent_guides_enable_on_vim_startup=0
 		" 从第二层开始可视化显示缩进
-let g:indent_guides_start_level=2
+let g:indent_guides_start_level=1
 		" 色块宽度
 let g:indent_guides_guide_size=1
 		" 快捷键 i 开/关缩进可视化
-" :nmap <silent> <Leader>i <Plug>IndentGuidesToggle
+:nmap <silent> <Leader>i <Plug>IndentGuidesToggle
 
 
 " ###### 多语言语法检查
@@ -97,45 +96,11 @@ endfunction
 nnoremap <Leader>s :call ToggleErrors()<cr>
 nnoremap <Leader>sn :lnext<cr>
 nnoremap <Leader>sp :lprevious<cr>
-
-" ##### 代码片段快速插入
-Bundle 'SirVer/ultisnips'
-" 	Snippets are separated from the engine. Add this if you want them:
-Bundle 'honza/vim-snippets'
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<leader><tab>"
-let g:UltiSnipsExpandTrigger       = "<leader><tab>"
-let g:UltiSnipsJumpForwardTrigger  = "<leader><tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<leader><s-tab>"
-let g:UltiSnipsSnippetDirectories  = ['UltiSnips']
-" 定义存放代码片段的文件夹 .vim/UltiSnips下，使用自定义和默认的，将会的到全局，有冲突的会提示
-" 进入对应filetype的snippets进行编辑
-let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
-map <leader>us :UltiSnipsEdit<CR>
-" ctrl+j/k 进行选择
-func! g:JInYCM()
-    if pumvisible()
-        return "\<C-n>"
-    else
-        return "\<c-j>"
-    endif
-endfunction
-func! g:KInYCM()
-    if pumvisible()
-        return "\<C-p>"
-    else
-        return "\<c-k>"
-    endif
-endfunction
-inoremap <c-j> <c-r>=g:JInYCM()<cr>
-au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:KInYCM()<cr>"
-let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
+        " 关闭 C 的语法检测, 主要是用于 lpc
+" let g:syntastic_ignore_files=[".*\.c$", ".*\.decl$"]
 
 " #### 主要用于 C/C++ 代码补全，需要 ctag 支持
-"Bundle 'vim-scripts/OmniCppComplete'
+Bundle 'vim-scripts/OmniCppComplete'
 
 
 " ##### Python 代码补全
@@ -147,32 +112,24 @@ Bundle 'yssource/python.vim'
 
 " ###### 自动补全单引号，双引号等
 Bundle 'Raimondi/delimitMate'
-	" for python docstring ,优化输入
+" for python docstring ,优化输入
 au FileType python let b:delimitMate_nesting_quotes = ['"']
+imap <expr> <CR> pumvisible() ? neocomplcache#close_popup() : '<Plug>delimitMateCR'
 
-
-" #####
-Bundle 'mileszs/ack.vim'
-let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
 
 " ###### 快速注释
-Bundle 'scrooloose/nerdcommenter'
+" Bundle 'scrooloose/nerdcommenter'
 " <leader>cc 注释选中内容
 " <leader>cu 取消选中注释
 " <leader>c$ 从当前光标开始到行尾注释掉
-let g:NERDSpaceDelims=1
+" let g:NERDSpaceDelims=1
+
 
 " ##### 快速去行尾空格
 Bundle 'bronson/vim-trailing-whitespace'
+" 下列文件类型中的行尾空格tab不高亮显示
 let g:extra_whitespace_ignored_filetypes = ['unite', 'mkd', 'diff']
 map <leader>, :FixWhitespace<cr>
-
-
-" ##### 快速加入修改环绕字符
-Bundle 'tpope/vim-surround'
-" for repeat -> enhance surround.vim, . to repeat command
-Bundle 'tpope/vim-repeat'
-""""""
 
 
 " ##### 更高效的移动 [,, + w/fx]
@@ -188,46 +145,7 @@ map <Leader><leader>. <Plug>(easymotion-repeat)
 
 
 " ##### 快速的匹配 https://github.com/vim-scripts/matchit.zip
-Bundle 'vim-scripts/matchit.zip'
-
-
-" ##### 显示marks - 方便自己进行标记和跳转
-" m[a-zA-Z] add mark
-" '[a-zA-Z] go to mark
-Bundle "kshenoy/vim-signature"
-" 书签设定。mx，设定/取消当前行名为 x 的标签；m,，自动设定下一个可用书签名，
-"   前面提说，独立书签名是不能重复的，在你已经有了多个独立书签，
-"   当想再设置书签时，需要记住已经设定的所有书签名，否则很可能会将已有的书签冲掉，这可不好，
-"   所以，vim-signature 为你提供了 m, 快捷键，
-"   自动帮你选定下一个可用独立书签名；mda，删除当前文件中所有独立书签。
-" 书签罗列。ms，罗列出当前文件中所有书签，选中后回车可直接跳转；
-" 书签跳转。mn，按行号前后顺序，跳转至下个独立书签；
-"   mp，按行号前后顺序，跳转至前个独立书签。
-"   书签跳转方式很多，除了这里说的行号前后顺序，
-"   还可以基于书签名字母顺序跳转、分类书签同类跳转、分类书签不同类间跳转等等。
-let g:SignatureMap = {
-        \ 'Leader'             :  "m",
-        \ 'PlaceNextMark'      :  "m,",
-        \ 'ToggleMarkAtLine'   :  "m.",
-        \ 'PurgeMarksAtLine'   :  "m-",
-        \ 'DeleteMark'         :  "dm",
-        \ 'PurgeMarks'         :  "mda",
-        \ 'PurgeMarkers'       :  "m<BS>",
-        \ 'GotoNextLineAlpha'  :  "']",
-        \ 'GotoPrevLineAlpha'  :  "'[",
-        \ 'GotoNextSpotAlpha'  :  "`]",
-        \ 'GotoPrevSpotAlpha'  :  "`[",
-        \ 'GotoNextLineByPos'  :  "]'",
-        \ 'GotoPrevLineByPos'  :  "['",
-        \ 'GotoNextSpotByPos'  :  "mn",
-        \ 'GotoPrevSpotByPos'  :  "mp",
-        \ 'GotoNextMarker'     :  "[+",
-        \ 'GotoPrevMarker'     :  "[-",
-        \ 'GotoNextMarkerAny'  :  "]=",
-        \ 'GotoPrevMarkerAny'  :  "[=",
-        \ 'ListLocalMarks'     :  "ms",
-        \ 'ListLocalMarkers'   :  "m?"
-        \ }"]]]']"}
+" Bundle 'vim-scripts/matchit.zip'
 
 
 " ##### 选中区块
@@ -248,7 +166,6 @@ let g:multi_cursor_quit_key='<Esc>'
 
 " ##### 文件搜索 change to https://github.com/ctrlpvim/ctrlp.vim
 Bundle 'ctrlpvim/ctrlp.vim'
-let g:ctrlp_map = '<leader>p'
 let g:ctrlp_cmd = 'CtrlP'
 map <leader>f :CtrlPMRU<CR>
 let g:ctrlp_custom_ignore = {
@@ -278,49 +195,7 @@ nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 let g:ctrlp_funky_syntax_highlight = 1
 let g:ctrlp_extensions = ['funky']
 
-
-
-
-" ##### 类似sublimetext的搜索
-Bundle "dyng/ctrlsf.vim"
-""""""
-" In CtrlSF window:
-" 回车/o, 打开
-" t       在tab中打开(建议)
-" T - Lkie t but focus CtrlSF window instead of opened new tab.
-" q - Quit CtrlSF window.
-nmap \ <Plug>CtrlSFCwordPath<CR>
-" let g:ctrlsf_position = 'below'
-" let g:ctrlsf_winsize = '30%'
-let g:ctrlsf_auto_close = 0
-let g:ctrlsf_confirm_save = 0
-" Note: cannot use <CR> or <C-m> for open
-" Use : <sapce> or <tab>
-let g:ctrlsf_mapping = {
-    \ "open"  : "<Space>",
-    \ "openb" : "O",
-    \ "tab"   : "t",
-    \ "tabb"  : "T",
-    \ "prevw" : "p",
-    \ "quit"  : "q",
-    \ "next"  : "<C-J>",
-    \ "prev"  : "<C-K>",
-    \ "pquit" : "q",
-    \ }
-nnoremap <leader>sp :CtrlSF<CR>
-
-
-
-" ======================= szw/vim-ctrlspace ==========================
-" Vim Workspace Controller
-Bundle 'szw/vim-ctrlspace'
-""""""
-let g:airline_exclude_preview = 1
-hi CtrlSpaceSelected guifg=#586e75 guibg=#eee8d5 guisp=#839496 gui=reverse,bold ctermfg=10 ctermbg=7 cterm=reverse,bold
-hi CtrlSpaceNormal   guifg=#839496 guibg=#021B25 guisp=#839496 gui=NONE ctermfg=12 ctermbg=0 cterm=NONE
-hi CtrlSpaceSearch   guifg=#cb4b16 guibg=NONE gui=bold ctermfg=9 ctermbg=NONE term=bold cterm=bold
-hi CtrlSpaceStatus   guifg=#839496 guibg=#002b36 gui=reverse term=reverse cterm=reverse ctermfg=12 ctermbg=8
-
+Bundle "tpope/vim-commentary"
 
 " ##### 括号显示增强
 Bundle 'kien/rainbow_parentheses.vim'
@@ -353,7 +228,7 @@ au Syntax * RainbowParenthesesLoadBraces
 
 " ##### 目录导航
 Bundle 'scrooloose/nerdtree'
-noremap <silent> <leader>n :NERDTreeToggle<CR>
+map <leader>n :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
 "close vim if the only window left open is a NERDTree
@@ -361,10 +236,10 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 " s/v 分屏打开文件
 let g:NERDTreeMapOpenSplit = 's'
 let g:NERDTreeMapOpenVSplit = 'v'
-let NERDTreeQuitOnOpen=1 "NERDTree中打开文件后自动关闭NERDTree窗口
 "打开NERDTree,定位到当前文件
 noremap <silent> <Leader>nf :NERDTreeFind<cr>
 autocmd vimenter * if !argc() | NERDTree | endif
+
 
 " ##### 目录导航
 Bundle 'jistr/vim-nerdtree-tabs'
@@ -382,6 +257,8 @@ Bundle 'majutsushi/tagbar'
 nmap <F9> :TagbarToggle<CR>
 nmap <leader>m :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
+let g:tagbar_sort = 0
+let g:tagbar_show_linenumbers = 2
 " cpp类型
 let g:tagbar_type_cpp = {
     \ 'kinds' : [
@@ -513,155 +390,75 @@ Bundle 'suan/vim-instant-markdown'
 let g:instant_markdown_slow = 1
 let g:instant_markdown_autostart = 0
 map <F12> :InstantMarkdownPreview<CR>
-nmap <leader>md :InstantMarkdownPreview<CR>
+map <leader>mp :InstantMarkdownPreview<CR>
 
 
 " ##### 增加对 STL\C++14等的C++语法高亮
 Bundle 'Mizuchi/STL-Syntax'
 
 
-" ##### *.cpp 和 *.h 间切换
-Bundle 'vim-scripts/a.vim'
-nmap <Leader>ch :A<CR>
-	" 子窗口中显示 *.cpp 或 *.h
-nmap <Leader>sch :AS<CR>
-map <F4> :A<CR>
-map <leader><F4> :AS<CR>
+
+" #### 自动补全
+"Bundle 'vim-scripts/AutoComplPop'
 
 
-" ##### 周期性针对这个工程自动生成标签文件，并通知 vim 引人该标签文件
-" Bundle 'vim-scripts/indexer.tar.gz'
-" 如果出问题了则使用：
-" cd ~/.vim/bundle/
-" git clone git@github.com:vim-scripts/indexer.tar.gz
-" 依赖项
-" Bundle 'DfrankUtil'
-" Bundle 'vimprj'
-" indexer 还有个自己的配置文件，用于设定各个工程的根目录路径，配置文件位于
-" ~/.indexer_files，内容可以设定为：
-" 设置插件 indexer 调用 ctags 的参数
-" 默认 --c++-kinds=+p+l，重新设置为 --c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v
-" 默认 --fields=+iaS 不满足 YCM 要求，需改为 --fields=+iaSl
-" let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
-" --------------- ~/.indexer_files ---------------
-"  [foo]
-"  /data/workplace/foo/src/
-"  [bar]
-"  /data/workplace/bar/src/
-
-
-" ##### 由接口快速生成实现框架
-Bundle 'protodef'
-" 依赖项
-Bundle 'FSwitch'
-" 设置 pullproto.pl 脚本路径
-let g:protodefprotogetter='~/.vim/bundle/protodef/pullproto.pl'
-" 成员函数的实现顺序与声明顺序一致
-let g:disable_protodef_sorting=1
-" pullproto.pl 是 protodef 自带的 perl 脚本，默认位于 ~/.vim 目录，由于改用
-" pathogen 管理插件，所以路径需重新设置。
+" ##### 比grep搜索更好
+" grep foo $(find . -name '*.pm' | grep -v .svn)
+Bundle 'mileszs/ack.vim'
+" let g:ackprg = 'ag --nogroup --nocolor --column --smart-case'
+let g:ack_default_options =
+              \ " -s -H --color --group --column --smart-case --follow"
+map <leader>a :Ack -i
 
 
 " ##### vim-powerline
+" Bundle 'tpope/vim-fugitive'
 Bundle 'Lokaltog/vim-powerline'
 " Bundle ' bling/vim-airline'
-" set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-14.(%l,%c%V%)\ %P
 " Always show the status line - use 2 lines for the status bar
 set laststatus=2
 
-" ##### 重量级补全
-Bundle 'Valloric/YouCompleteMe'
-let g:ycm_key_list_select_completion = ['<Down>', '<Tab>']   " C-j 同时可用
-let g:ycm_key_list_previous_completion = ['<Up>']   " C-k 同时可用
+function! Multiple_cursors_before()
+	if exists(':NeoCompleteLock')==2
+	 exe 'NeoCompleteLock'
+	endif
+endfunction
+
+function! Multiple_cursors_after()
+
+	if exists(':NeoCompleteUnLock')==2
+	 exe 'NeoCompleteUnLock'
+	endif
+endfunction
+
+Plugin 'Valloric/YouCompleteMe'
+" youcompleteme  默认tab  s-tab 和自动补全冲突
+" let g:ycm_key_list_select_completion=['<c-n>']
+" let g:ycm_key_list_select_completion = ['<Down>']
+" let g:ycm_key_list_previous_completion=['<c-p>']
+" let g:ycm_key_list_previous_completion = ['<Up>']
+let g:ycm_confirm_extra_conf=0      " 关闭加载.ycm_extra_conf.py提示
 let g:ycm_complete_in_comments = 1  "在注释输入中也能补全
 let g:ycm_complete_in_strings = 1   "在字符串输入中也能补全
-let g:ycm_use_ultisnips_completer = 1 "提示UltiSnips
-let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符串中的文字也会被收入补全
+let g:ycm_collect_identifiers_from_tags_files=1                 " 开启 YCM
+let g:ycm_collect_identifiers_from_comments_and_strings = 1   "注释和字符串
+let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全, 不过python关键字
 let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_seed_identifiers_with_syntax=1   "语言关键字补全, 不过python关键字都很短，所以，需要的自己打开
-let g:ycm_key_detailed_diagnostics = '<leader>d'    " 查看当前光标下标识符的详细信息
-let g:ycm_goto_buffer_command = 'new-tab'  " 跳转到定义处,新Tab打开
-let g:ycm_error_symbol = '❥✘' "  错误标记 ✗✘☛☛❦❥❤︎ℳ❣❣➤➤➽
-let g:ycm_warning_symbol = '❥➤' " 警告符号
-nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <leader>] :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <leader>gd :YcmCompleter GoToDeclaration<CR>
-nnoremap <leader>[ :YcmCompleter GoToDeclaration<CR>
-nmap <leader>e :YcmDiags<CR>
-" 引入，可以补全系统，以及python的第三方包 针对新老版本YCM做了兼容
-" old version
+let g:ycm_min_num_of_chars_for_completion=2                     " 从第2个键
 if !empty(glob("~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"))
-    let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py"
+    let g:ycm_global_ycm_extra_conf =
 endif
-" new version
 if !empty(glob("~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"))
-    let g:ycm_global_ycm_extra_conf = "~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py"
+    let g:ycm_global_ycm_extra_conf =
 endif
 
-Bundle 'tdcdev/ycm_simple_conf'
-
-
-Bundle 'Valloric/ListToggle'
-let g:lt_location_list_toggle_map = '<leader>lt'
-let g:lt_quickfix_list_toggle_map = '<leader>qt'
-" ##### 快速赋值语句对齐
-Bundle 'junegunn/vim-easy-align'
-vmap <Leader>a <Plug>(EasyAlign)
-nmap <Leader>a <Plug>(EasyAlign)
-if !exists('g:easy_align_delimiters')
-  let g:easy_align_delimiters = {}
-endif
-let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
-
-
-" ##### git.  git操作还是习惯命令行,vim里面处理简单diff编辑操作
-" :Gdiff  :Gstatus :Gvsplit
-Bundle 'tpope/vim-fugitive'
-""""""
-nnoremap <leader>ge :Gdiff<CR>
-" not ready to open
-" <leader>gbm maps to :Gblame<CR>
-" <leader>gst maps to :Gstatus<CR>
-" " 和现有冲突
-" <leader>gdf maps to :Gdiff<CR>
-" <leader>glg maps to :Glog<CR>
-" <leader>gci maps to :Gcommit<CR>
-" <leader>gps maps to :Git push<CR>
-
-" ##### 同git diff,实时展示文件中修改的行
-" 只是不喜欢除了行号多一列, 默认关闭,gs时打开
-Bundle 'airblade/vim-gitgutter'
-""""""
-let g:gitgutter_map_keys = 0
-let g:gitgutter_enabled = 0
-let g:gitgutter_highlight_lines = 1
-nnoremap <leader>gs :GitGutterToggle<CR>
-
-
-" ##### 可以查看回到某个历史状态
-Bundle 'sjl/gundo.vim'
-""""""
-noremap <leader>ht :GundoToggle<CR>
-
-
-" ##### quickrun
-Bundle 'thinca/vim-quickrun'
-""""""
-let g:quickrun_config = {
-\   "_" : {
-\       "outputter" : "message",
-\   },
-\}
-let g:quickrun_no_default_key_mappings = 1
-nmap <Leader>r <Plug>(quickrun)
-map <F10> :QuickRun<CR>
-
-" Just Fun
-Bundle 'uguu-org/vim-matrix-screensaver'
-
-" 给 typedef 和 enum 配色
-" 需要使用到 ctags
-Bundle 'vim-scripts/TagHighlight'
+"mapping
+nmap <leader>gd :YcmDiags<CR>
+nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>           " 跳转到申明处
+nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>            " 跳转到定义处
+nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+" 直接触发自动补全
+let g:ycm_key_invoke_completion = '<C-Space>'
 
 " ################## 插件配置结束 ###########################
 filetype plugin indent on     " required!

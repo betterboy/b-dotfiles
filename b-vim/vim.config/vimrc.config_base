@@ -488,14 +488,14 @@ nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 set tags+=~/.vim/systags
-set tags+=~/.vim/systags_local
+set tags+=~/recipes/tags
 " map <leader><F12> :call Do_CsTag_Sys()<CR>
 map <leader><leader>T :call Do_CsTag_Sys()<CR>
 function! Do_CsTag_Sys()
 	delete("~/.vim/systags")
 	" 本地自定义的头文件目录标签文件
 	delete("~/.vim/systags_local")
-	silent! execute "!ctags -R -f ~/.vim/systags -L ~/.vim/tags_list"
+	silent! execute "!ctags -R -f –c++-kinds=+p –fields=+iaS –extra=+q ~/.vim/systags -L ~/.vim/tags_list"
 	" 需要自己新建 tags_list_local 文件，用以指示自定义的头文件目录
 	silent! execute "!ctags -R -f ~/.vim/systags_local -L ~/.vim/tags_list_local"
 endfunction
